@@ -1,0 +1,22 @@
+{
+  "name": "regex-calendar",
+  "version": "1.0.0",
+  "description": "Use regex to find a date and add it to calendar.",
+  "scripts": {
+    "build": "gulp",
+    "lint": "jshint src/*.gs",
+    "format": "prettier --write src/*.gs"
+  },
+  "author": "Daryl Mathison",
+  "license": "GPL v3",
+  "devDependencies": {
+    "eslint": "^4.8.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "jshint": "^2.9.5",
+    "prettier": "1.7.3"
+  },
+  "dependencies": {
+    "clasp": "^0.1.0"
+  }
+}
