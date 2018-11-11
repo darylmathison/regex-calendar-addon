@@ -17,6 +17,7 @@
     "prettier": "1.7.3"
   },
   "dependencies": {
-    "clasp": "^0.1.0"
+    "clasp": "^0.1.0",
+    "moment": "^2.22.2"
   }
 }

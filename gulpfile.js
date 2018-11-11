@@ -16,9 +16,10 @@ const gulp = require('gulp');
 const concat = require('gulp-concat');
 
 const third_party_source = [
-	'../third_party/xregex/xregexp-all.js',
-	'../third_party/moment/moment.js',
-	'../third_party/moment-timezone/moment-timezone.js'
+  'third_party/heap-js/heap.js',
+	'third_party/moment/moment.js',
+	'third_party/moment-timezone/moment-timezone.js',
+  'third_party/lodash/lodash.js'
 ];
 
 gulp.task('concat-third-party', function() {

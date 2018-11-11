@@ -16,18 +16,18 @@
     "https://www.googleapis.com/auth/gmail.addons.current.message.readonly"
   ],
   "gmail": {
-    "name": "Meeting assistant",
-    "logoUrl": "https://cdn.rawgit.com/webdog/octicons-png/bd02e5bc/clock.svg.png",
+    "name": "Play with EnviroGuard",
+    "logoUrl": "https://www.gstatic.com/images/icons/material/system/1x/label_googblue_24dp.png",
     "contextualTriggers": [{
-      "unconditional": {},
-      "onTriggerFunction": "handleShowScheduler"
-    }],
-    "universalActions": [{
-      "text": "Settings",
-      "runFunction": "handleShowSettings"
+      "unconditional": {
+      },
+      "onTriggerFunction": "buildAddOn"
     }],
     "openLinkUrlPrefixes": [
+      "https://mail.google.com/",
       "https://calendar.google.com"
-    ]
+    ],
+    "primaryColor": "#4285F4",
+    "secondaryColor": "#4285F4"
   }
 }
