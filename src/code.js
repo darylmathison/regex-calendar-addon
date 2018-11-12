@@ -22,7 +22,11 @@ function buildAddOn(e) {
     var mailText = message.getPlainBody();
 
     var dateRange = createRange(mailText);
+    var conflicts = existingConflicts(dateRange);
+    var message = "";
+    if(conflicts && conflicts.length > 0) {
 
+    }
     // Create a checkbox group for user labels that are added to prior section.
     var textInput = CardService.newTextInput().setTitle("Message")
       .setFieldName("message_text")
@@ -70,18 +74,14 @@ function createRange(mailText) {
     };
 }
 
-/**
- * Converts an GmailLabel object to a array of strings.
- * Used for easy sorting and to determine if a value exists.
- *
- * @param {labelsObjects} A GmailLabel object array.
- * @return {lables[]} An array of labels names as strings.
- */
-function getLabelArray(labelsObjects) {
-    var labels = [];
-    for (var i = 0; i < labelsObjects.length; i++) {
-        labels[i] = labelsObjects[i].getName();
+function existingConflicts(dateRange) {
+    var calendars = Calendar.getAllCalendars();
+    var conflicts = [];
+    for (i = 0; i < calendars.length; i++) {
+        events = calendars[i].getEvents(dateRange.startDate, dateRange.endDate);
+        if (event.length > 0) {
+            conflicts.concat(events);
+        }
     }
-    labels.sort();
-    return labels;
+    return conflicts;
 }
