@@ -8,6 +8,7 @@
  * @return {Card[]}
  */
 function buildAddOn(e) {
+  Logger.clear();
     // Activate temporary Gmail add-on scopes.
     var accessToken = e.messageMetadata.accessToken;
     GmailApp.setCurrentMessageAccessToken(accessToken);
@@ -22,15 +23,26 @@ function buildAddOn(e) {
     var mailText = message.getPlainBody();
 
     var dateRange = createRange(mailText);
-    var conflicts = existingConflicts(dateRange);
     var message = "";
+  
+  if (dateRange) {
+    var conflicts = existingConflicts(dateRange);
     if(conflicts && conflicts.length > 0) {
-
+      message = "There are " + conflicts.length + " conflicts\n";
+      for ( i = 0; i < conflicts.length; i++ ) {
+        Logger.log(conflicts[i]);
+        message += " " + conflicts[i].getTitle() + " start time: " + conflicts[i].getStartTime()  + conflicts[i].getEndTime() + "\n";
+      }
+    } else {
+      message = "Date range " + new Date(dateRange.startDate) + " - " + new Date(dateRange.endDate);
     }
+  } else {
+    message = "This is not an EvironGuard email";
+  }
     // Create a checkbox group for user labels that are added to prior section.
     var textInput = CardService.newTextInput().setTitle("Message")
       .setFieldName("message_text")
-      .setMultiline(true).setValue(dateRange.startDate + " - " + dateRange.endDate);
+      .setMultiline(true).setValue(message);
 
     // Add the checkbox group to the section.
     section.addWidget(textInput);
@@ -56,6 +68,8 @@ function createRange(mailText) {
     var dateRegex = /([A-Za-z]{3}) (\d+).*?((\d{1,2}):(\d{1,2})(am|pm))-((\d{1,2}):(\d{1,2})(am|pm))/;
 
     var date_parts = mailText.match(dateRegex);
+    Logger.log(date_parts);
+  if (date_parts) {
     var year = new Date().getFullYear();
 
     return {
@@ -72,16 +86,20 @@ function createRange(mailText) {
           date_parts[7]
         ), "YYYYMMMDD hh:mm:ssa")
     };
+  } else {
+    return null;
+  }
 }
 
 function existingConflicts(dateRange) {
-    var calendars = Calendar.getAllCalendars();
-    var conflicts = [];
-    for (i = 0; i < calendars.length; i++) {
-        events = calendars[i].getEvents(dateRange.startDate, dateRange.endDate);
-        if (event.length > 0) {
-            conflicts.concat(events);
-        }
-    }
-    return conflicts;
+  var calendars = CalendarApp.getAllCalendars();
+  var conflicts = Array.concat.apply(this,calendars.map(function(calendar, index) {
+    Logger.log(calendar.getName());
+    var events = calendar.getEvents(new Date(dateRange.startDate), new Date(dateRange.endDate));
+    Logger.log(events);
+    //return calendar.getEvents(new Date(dateRange.startTime), new Date(dateRange.endTime));
+    return events;
+  }));
+  
+  return conflicts;
 }
