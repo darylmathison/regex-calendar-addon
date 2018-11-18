@@ -11,6 +11,5 @@ dist
 
 .clasp.json
 
-meeting-assistant/.clasp.json
-meeting-assistant/package-lock.json
 .DS_Store/
+.claspignore
