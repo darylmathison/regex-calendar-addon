@@ -7,13 +7,13 @@ function buildCards(conflicts, dateRange) {
             conflicts[i].event.getStartTime() + " - " + conflicts[i].event.getEndTime()
           ));
     }
-    // Logger.log(dateRange);
     var actionParameters = {
-        "startTime": new String(dateRange.startDate.milliseconds()),
-        "endTime": new String(dateRange.endDate.milliseconds())
-        };
+        "startTime": dateRange.startDate.toJSON(),
+        "endTime": dateRange.endDate.toJSON()
+    };
     var action = CardService.newAction().setFunctionName("addToCalendar").setParameters(actionParameters);
     var button = CardService.newTextButton().setOnClickAction(action).setText("Create Event");
+    conflictSection.addWidget(button);
 
     var card = CardService.newCardBuilder()
       .setHeader(
@@ -25,6 +25,9 @@ function buildCards(conflicts, dateRange) {
 }
 
 function addToCalendar(actionEvent) {
-    var event = CalendarApp.getDefaultCalendar().createEvent("EnviroGuard Service", startTime, endTime);
-    event.setColor("Blueberry");
+    var parameters = actionEvent.parameters;
+    var start = moment(parameters["startTime"]);
+    var end = moment(parameters["endTime"]);
+    CalendarApp.getDefaultCalendar().createEvent("EnviroGuard Service",
+      start.toDate(), end.toDate());
 }
