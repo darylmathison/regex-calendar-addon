@@ -7,9 +7,9 @@
 .idea
 
 dist
-**/node_modules
+node_modules/**
 
 .clasp.json
 
-.DS_Store/
-.claspignore
+.DS_Store
+third_party/**
