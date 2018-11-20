@@ -1,19 +1,30 @@
-function buildCard(title, message) {
-  var textInput = CardService.newTextInput().setTitle(title)
-    .setFieldName("message_text")
-    .setMultiline(true).setValue(message);
+function buildCards(conflicts, dateRange) {
+    var conflictSection = CardService.newCardSection().setHeader("<b>Conflicts</b>");
 
-  var section = CardService.newCardSection()
-    .setHeader("<font color=\"#1257e0\"><b>" + title + "</b></font>");
-  section.addWidget(textInput);
+    for (i = 0; i < conflicts.length; i++) {
+        conflictSection.addWidget(
+          CardService.newKeyValue().setTopLabel(conflicts[i].event.getTitle() + " - " + conflicts[i].calendar.getName()).setContent(
+            conflicts[i].event.getStartTime() + " - " + conflicts[i].event.getEndTime()
+          ));
+    }
+    // Logger.log(dateRange);
+    var actionParameters = {
+        "startTime": new String(dateRange.startDate.milliseconds()),
+        "endTime": new String(dateRange.endDate.milliseconds())
+        };
+    var action = CardService.newAction().setFunctionName("addToCalendar").setParameters(actionParameters);
+    var button = CardService.newTextButton().setOnClickAction(action).setText("Create Event");
 
-  // Build the main card after adding the section.
-  var card = CardService.newCardBuilder()
-    .setHeader(CardService.newCardHeader()
-      .setTitle("EnviroGuard")
-      .setImageUrl("https://www.gstatic.com/images/icons/material/system/1x/label_googblue_48dp.png"))
-    .addSection(section)
-    .build();
+    var card = CardService.newCardBuilder()
+      .setHeader(
+        CardService.newCardHeader().setTitle("EnviroGuard Service Checker"))
+      .addSection(conflictSection)
+      .build();
 
-  return [card];
+    return [card];
+}
+
+function addToCalendar(actionEvent) {
+    var event = CalendarApp.getDefaultCalendar().createEvent("EnviroGuard Service", startTime, endTime);
+    event.setColor("Blueberry");
 }

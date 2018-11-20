@@ -24,8 +24,8 @@ function buildAddOn(e) {
     if (conflicts && conflicts.length > 0) {
       message = "There are " + conflicts.length + " conflicts\n";
       for (i = 0; i < conflicts.length; i++) {
-        Logger.log(conflicts[i]);
-        message += " " + conflicts[i].getTitle() + " start time: " + conflicts[i].getStartTime() + conflicts[i].getEndTime() + "\n";
+        Logger.log(conflicts[i].event);
+        message += " " + conflicts[i].event.getTitle() + " start time: " + conflicts[i].event.getStartTime() + " - " + conflicts[i].event.getEndTime() + "\n";
       }
     } else {
       message = "Date range " + new Date(dateRange.startDate) + " - " + new Date(dateRange.endDate);
@@ -34,7 +34,7 @@ function buildAddOn(e) {
     message = "This is not an EvironGuard email";
   }
 
-  return buildCard("me", message);
+  return buildCards(conflicts, dateRange);
 }
 
 function formatDate(year, month, day, time) {
@@ -74,7 +74,13 @@ function existingConflicts(dateRange) {
   var calendars = CalendarApp.getAllCalendars();
   var conflicts = Array.concat.apply(this, calendars.map(function(calendar, index) {
     Logger.log(calendar.getName());
-    var events = calendar.getEvents(new Date(dateRange.startDate), new Date(dateRange.endDate));
+    var events = calendar.getEvents(new Date(dateRange.startDate), new Date(dateRange.endDate))
+    .map(function(event) {
+      return {
+        calendar: calendar,
+        event: event
+      }       
+    });
     Logger.log(events);
     //return calendar.getEvents(new Date(dateRange.startTime), new Date(dateRange.endTime));
     return events;
